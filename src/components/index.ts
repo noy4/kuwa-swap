@@ -1,1 +1,1 @@
-export * from './my-link'
+export * from './MyLink'

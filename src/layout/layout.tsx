@@ -1,5 +1,6 @@
 import { MyLink } from '@/components'
 import { Box, chakra, Spacer } from '@chakra-ui/react'
+import Head from 'next/head'
 import { ReactNode, VFC } from 'react'
 
 type Props = {
@@ -9,6 +10,10 @@ type Props = {
 export const Layout: VFC<Props> = ({ children }) => {
   return (
     <>
+      <Head>
+        <title>Kuwa Swap</title>
+      </Head>
+
       <chakra.header
         display='flex'
         alignItems='center'
