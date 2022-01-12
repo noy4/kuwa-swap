@@ -1,0 +1,15 @@
+{
+  // ファイルを非表示にする
+  "files.exclude": {
+    ".next": true,
+    "node_modules": true,
+    ".editorconfig": true,
+    // ".eslintrc.json": true,
+    ".gitignore": true,
+    ".prettierrc": true,
+    "next.config.js": true,
+    "next-env.d.ts": true,
+    "tsconfig.json": true
+  },
+  "editor.formatOnSave": true
+}
