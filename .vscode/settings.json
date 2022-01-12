@@ -9,7 +9,8 @@
     ".prettierrc": true,
     "next.config.js": true,
     "next-env.d.ts": true,
-    "tsconfig.json": true
+    "tsconfig.json": true,
+    "yarn.lock": true
   },
   "editor.formatOnSave": true
 }
