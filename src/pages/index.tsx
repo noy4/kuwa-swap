@@ -17,7 +17,7 @@ const Home: NextPage = () => {
   return (
     <Layout>
       <Container maxW='md'>
-        <Box bg='#222429' mt='24' p='4' rounded='3xl'>
+        <Box bg='base.dark' mt='24' p='4' rounded='3xl'>
           <Box border='1px' borderColor='#2D2F36' rounded='2xl' px='4' py='2'>
             <Flex color='gray.400' fontSize='sm'>
               <Box>From</Box>
