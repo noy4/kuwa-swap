@@ -1,9 +1,11 @@
 import { getTokenAmount } from '@/lib'
 import { Token } from '@/types'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import {
   useERC20Balances,
+  useMoralis,
+  useMoralisCloudFunction,
   useNativeBalance,
   useOneInchQuote,
   useOneInchSwap,
@@ -13,6 +15,7 @@ import useFetch from 'use-http'
 const tokenListUrl = 'https://unpkg.com/quickswap-default-token-list'
 
 export const useHome = () => {
+  const { account } = useMoralis()
   const { data: notNativeTokens } = useERC20Balances()
   const { data: nativeTokenBalance } = useNativeBalance()
   const { data: tokenListRes } = useFetch(tokenListUrl, [])
@@ -23,16 +26,13 @@ export const useHome = () => {
   const { fromAmount, toAmount } = watch()
 
   const nativeToken: Token = {
-    address: '0x0000000000000000000000000000000000001010', // アドレスが違う？
+    address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
     chainId: 137,
     logoURI: '',
     name: 'Matic',
     symbol: 'MATIC',
     decimals: 18,
     balance: nativeTokenBalance.balance ?? '',
-  }
-  const getFromTokenAmount = () => {
-    return getTokenAmount(fromToken)
   }
   const addTokenBalance = (t: Token) => {
     const tokenInWallet = notNativeTokens?.find(
@@ -48,8 +48,7 @@ export const useHome = () => {
     .map(addTokenBalance)
     .filter((t) => t.chainId === 137)
     .sort((a, b) => getTokenAmount(b) - getTokenAmount(a))
-  // Maticからのスワップができない（アドレスが違う？）
-  // tokens = [nativeToken, ...(tokens ?? [])]
+  tokens = [nativeToken, ...(tokens ?? [])]
 
   const oneInchParams = {
     chain: 'polygon',
@@ -64,14 +63,24 @@ export const useHome = () => {
     fromAmount: fromAmount || 0,
   }
   const { data: quote, getQuote } = useOneInchQuote(oneInchParams)
-
-  const { swap, data, error } = useOneInchSwap(oneInchParams)
-  console.log('data:', data)
+  const { data: swapData, swap, error } = useOneInchSwap(oneInchParams)
+  const { data: hey } = useMoralisCloudFunction('hey')
+  console.log('quote:', quote)
+  console.log('swapData:', swapData)
   console.log('error:', error)
+  console.log('hey:', hey)
 
   const onSubmit = handleSubmit(async (values) => {
     console.log('values:', values)
     console.log('oneInchParams:', oneInchParams)
+    const options = {
+      chain: 'polygon',
+      fromTokenAddress: fromToken?.address ?? '',
+      toTokenAddress: toToken?.address ?? '',
+      amount: fromAmount || 0,
+      fromAddress: account,
+      slippage: 1,
+    }
     const receipt = await swap()
     console.log('receipt:', receipt)
   })
